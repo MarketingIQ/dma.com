@@ -1,0 +1,166 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+name: FBSDKShareKit
+
+include:
+  - ../xcodegen_project_common.yml
+
+projectReferences:
+  FBSDKCoreKit_Basics:
+    path: ../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
+  FBSDKCoreKit:
+    path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
+  TestTools:
+    path: ../TestTools/TestTools.xcodeproj
+
+options:
+  deploymentTarget:
+    tvOS: '11.0'
+
+configFiles:
+  Debug: Configurations/Shared/Configuration/Debug.xcconfig
+  Release: Configurations/Shared/Configuration/Release.xcconfig
+
+settings:
+  base:
+    # Some iOS defaults will be overridden by Xcodegen.
+    # We need to explicitly set them to maintain parity with
+    # the project file being replaced
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
+    SWIFT_OPTIMIZATION_LEVEL: -O
+    ENABLE_NS_ASSERTIONS: YES
+
+targets:
+  FBSDKShareKit-Static:
+    type: framework
+    platform: iOS
+    productName: FBSDKShareKit
+    sources:
+      - path: FBSDKShareKit
+        headerVisibility: public
+    configFiles:
+      Debug: Configurations/FBSDKShareKit-Static.xcconfig
+      Release: Configurations/FBSDKShareKit-Static.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
+        link: false
+      - target: FBSDKCoreKit/FBSDKCoreKit-Static
+        link: false
+    preBuildScripts:
+      - name: Run Swiftlint
+        showEnvVars: false
+        script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      CLANG_ENABLE_MODULES: YES
+      DEFINES_MODULE: YES
+  FBSDKShareKit-Dynamic:
+    type: framework
+    platform: iOS
+    productName: FBSDKShareKit
+    sources:
+      - path: FBSDKShareKit
+        headerVisibility: public
+    configFiles:
+      Debug: Configurations/FBSDKShareKit-Dynamic.xcconfig
+      Release: Configurations/FBSDKShareKit-Dynamic.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
+      - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
+      - sdk: UIKit.framework
+      - sdk: CoreGraphics.framework
+      - sdk: Photos.framework
+      - sdk: Social.framework
+        weak: true
+    preBuildScripts:
+      - name: Run Swiftlint
+        showEnvVars: false
+        script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      CLANG_ENABLE_MODULES: YES
+      DEFINES_MODULE: YES
+  FBSDKShareKit_TV-Static:
+    type: framework
+    platform: tvOS
+    productName: FBSDKShareKit
+    sources:
+      - path: FBSDKShareKit
+        headerVisibility: public
+    configFiles:
+      Debug: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
+      Release: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
+        link: false
+      - target: FBSDKCoreKit/FBSDKCoreKit_TV-Static
+        link: false
+    preBuildScripts:
+      - name: Run Swiftlint
+        showEnvVars: false
+        script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      DEFINES_MODULE: YES
+  FBSDKShareKit_TV-Dynamic:
+    type: framework
+    platform: tvOS
+    productName: FBSDKShareKit
+    sources:
+      - path: FBSDKShareKit
+        headerVisibility: public
+    configFiles:
+      Debug: Configurations/FBSDKShareKit-tvOS-Dynamic.xcconfig
+      Release: Configurations/FBSDKShareKit-tvOS-Dynamic.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
+      - target: FBSDKCoreKit/FBSDKCoreKit_TV-Dynamic
+      - sdk: UIKit.framework
+      - sdk: CoreGraphics.framework
+      - sdk: Photos.framework
+    preBuildScripts:
+      - name: Run Swiftlint
+        showEnvVars: false
+        script: ../scripts/build_phase_swiftlint.sh
+    settings:
+      DEFINES_MODULE: YES
+  FBSDKShareKitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - FBSDKShareKitTests
+    configFiles:
+      Debug: Configurations/FBSDKShareKitTests.xcconfig
+      Release: Configurations/FBSDKShareKitTests.xcconfig
+    dependencies:
+      - target: FBSDKShareKit-Dynamic
+        embed: false
+      - target: TestTools/TestTools
+        embed: false
+    settings:
+      ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
+      GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS: NO
+schemes:
+  FBSDKShareKit-Static:
+    build:
+      targets:
+        FBSDKShareKit-Static: all
+  FBSDKShareKit-Dynamic:
+    build:
+      targets:
+        FBSDKShareKit-Dynamic: all
+    test:
+      targets:
+        - FBSDKShareKitTests
+      gatherCoverageData: true
+      coverageTargets:
+        - FBSDKShareKit-Dynamic
+  FBSDKShareKit_TV-Static:
+    build:
+      targets:
+        FBSDKShareKit_TV-Static: all
+  FBSDKShareKit_TV-Dynamic:
+    build:
+      targets:
+        FBSDKShareKit_TV-Dynamic: all
