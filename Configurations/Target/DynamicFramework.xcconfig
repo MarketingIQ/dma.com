@@ -1,0 +1,34 @@
+// Copyright (c) Facebook, Inc. and its affiliates.
+// All rights reserved.
+//
+// This source code is licensed under the license found in the
+// LICENSE file in the root directory of this source tree.
+
+// Cocoa Touch Framework
+MACH_O_TYPE = mh_dylib
+SKIP_INSTALL = YES
+CODE_SIGNING_REQUIRED = NO
+CODE_SIGN_IDENTITY =
+
+// Required for dynamic frameworks to properly emit bitcode
+ENABLE_BITCODE = YES
+
+// Enables the framework to be included from any location as long as the
+// loader’s runpath search paths includes it. For example from an application
+// bundle (inside the "Frameworks" folder) or shared folder
+INSTALL_PATH = @rpath
+LD_DYLIB_INSTALL_NAME = @rpath/$(PRODUCT_NAME).$(WRAPPER_EXTENSION)/$(PRODUCT_NAME)
+
+// Where to find embedded frameworks
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+
+// Language
+CLANG_WARN_DOCUMENTATION_COMMENTS = YES
+
+// Packaging
+DEFINES_MODULE = YES
+CLANG_MODULES_AUTOLINK = NO
+
+// Whether function calls should be position-dependent
+// (should always be disabled for library code)
+GCC_DYNAMIC_NO_PIC = NO

@@ -1,0 +1,18 @@
+// Copyright (c) Facebook, Inc. and its affiliates.
+// All rights reserved.
+//
+// This source code is licensed under the license found in the
+// LICENSE file in the root directory of this source tree.
+
+// Cocoa Touch Framework
+MACH_O_TYPE = staticlib
+SKIP_INSTALL = YES
+CODE_SIGNING_REQUIRED = NO
+
+// Language
+CLANG_WARN_DOCUMENTATION_COMMENTS = YES
+
+// Packaging
+DEFINES_MODULE = YES
+
+CLANG_ENABLE_MODULE_DEBUGGING = NO
