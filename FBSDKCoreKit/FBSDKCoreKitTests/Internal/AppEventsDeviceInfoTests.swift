@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+@testable import FBSDKCoreKit
+
+import TestTools
+import XCTest
+
+final class AppEventsDeviceInfoTests: XCTestCase {
+
+  // swiftlint:disable implicitly_unwrapped_optional
+  var deviceInfo: _AppEventsDeviceInfo!
+  var settings: TestSettings!
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  override func setUp() {
+    super.setUp()
+
+    settings = TestSettings()
+    deviceInfo = _AppEventsDeviceInfo()
+    deviceInfo.configure(settings: settings)
+  }
+
+  override func tearDown() {
+    settings = nil
+    deviceInfo = nil
+
+    super.tearDown()
+  }
+
+  func testDefaultDependencies() {
+    deviceInfo = _AppEventsDeviceInfo()
+    XCTAssertNil(
+      deviceInfo.settings,
+      "Should not have settings by default"
+    )
+  }
+
+  func testConfiguringWithDependencies() {
+    XCTAssertTrue(
+      deviceInfo.settings === settings,
+      "Should use the provided settings"
+    )
+  }
+}
