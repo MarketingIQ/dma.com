@@ -1,0 +1,216 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+name: FBSDKCoreKit
+
+include:
+  - ../xcodegen_project_common.yml
+
+projectReferences:
+  FBSDKCoreKit_Basics:
+    path: ../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
+  FBAEMKit:
+    path: ../FBAEMKit/FBAEMKit.xcodeproj
+  TestTools:
+    path: ../TestTools/TestTools.xcodeproj
+
+configFiles:
+  Debug: Configurations/Shared/Configuration/Debug.xcconfig
+  Release: Configurations/Shared/Configuration/Release.xcconfig
+
+settings:
+  base:
+    # Some iOS defaults will be overridden by Xcodegen.
+    # We need to explicitly set them to maintain parity with
+    # the project file being replaced
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
+    DISABLE_MANUAL_TARGET_ORDER_BUILD_WARNING: YES
+
+targets:
+  FBSDKCoreKit-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
+    type: framework
+    platform: iOS
+    productName: FBSDKCoreKit
+    sources:
+      - path: FBSDKCoreKit/include
+        headerVisibility: public
+      - path: FBSDKCoreKit
+        headerVisibility: project
+        createIntermediateGroups: true
+        excludes:
+          - include
+          - FBSDKCoreKit.modulemap
+          - Info.plist
+      - path: FBSDKCoreKit/Info.plist
+        group: FBSDKCoreKit/Supporting Files
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit-Static.xcconfig
+      Release: Configurations/FBSDKCoreKit-Static.xcconfig
+    dependencies:
+      - target: FBAEMKit/FBAEMKit-Static
+        link: false
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Static
+        link: false
+      - sdk: SafariServices.framework
+      - sdk: WebKit.framework
+    settings:
+      CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+      CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+  FBSDKCoreKit-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
+    type: framework
+    platform: iOS
+    productName: FBSDKCoreKit
+    sources:
+      - path: FBSDKCoreKit/include
+        headerVisibility: public
+      - path: FBSDKCoreKit
+        headerVisibility: project
+        createIntermediateGroups: true
+        excludes:
+          - include
+          - FBSDKCoreKit.modulemap
+          - Info.plist
+      - path: FBSDKCoreKit/Info.plist
+        group: FBSDKCoreKit/Supporting Files
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit-Dynamic.xcconfig
+      Release: Configurations/FBSDKCoreKit-Dynamic.xcconfig
+    dependencies:
+      - target: FBAEMKit/FBAEMKit-Dynamic
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
+      - sdk: Accelerate.framework
+        weak: true
+      - sdk: SafariServices.framework
+        weak: true
+      - sdk: AdSupport.framework
+      - sdk: CoreGraphics.framework
+      - sdk: StoreKit.framework
+        weak: true
+      - sdk: UIKit.framework
+      - sdk: WebKit.framework
+        weak: true
+      - sdk: libz.tbd
+    settings:
+      CLANG_WARN_STRICT_PROTOTYPES: NO
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+      CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+  FBSDKCoreKit_TV-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
+    type: framework
+    platform: tvOS
+    productName: FBSDKCoreKit
+    sources:
+      - path: FBSDKCoreKit
+        headerVisibility: project
+        excludes:
+          - include
+          - FBSDKCoreKit.modulemap
+          - Info.plist
+          - FBProfilePictureView.swift
+          - Internal/ProfilePictureViewState.swift
+      - path: FBSDKCoreKit/include
+        headerVisibility: public
+      - path: FBSDKCoreKit/Info.plist
+        group: FBSDKCoreKit/Supporting Files
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit-tvOS-Static.xcconfig
+      Release: Configurations/FBSDKCoreKit-tvOS-Static.xcconfig
+    dependencies:
+      - target: FBAEMKit/FBAEMKit_TV-Static
+        link: false
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
+        link: false
+    settings:
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+      CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+  FBSDKCoreKit_TV-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
+    type: framework
+    platform: tvOS
+    productName: FBSDKCoreKit
+    sources:
+      - path: FBSDKCoreKit
+        headerVisibility: project
+        excludes:
+          - include
+          - FBSDKCoreKit.modulemap
+          - Info.plist
+          - FBProfilePictureView.swift
+          - Internal/ProfilePictureViewState.swift
+      - path: FBSDKCoreKit/include
+        headerVisibility: public
+      - path: FBSDKCoreKit/Info.plist
+        group: FBSDKCoreKit/Supporting Files
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit-tvOS-Dynamic.xcconfig
+      Release: Configurations/FBSDKCoreKit-tvOS-Dynamic.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
+      - target: FBAEMKit/FBAEMKit_TV-Dynamic
+      - sdk: AdSupport.framework
+      - sdk: CoreGraphics.framework
+      - sdk: CoreImage.framework
+      - sdk: libz.tbd
+      - sdk: StoreKit.framework
+      - sdk: UIKit.framework
+    settings:
+      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+      CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
+  FBSDKCoreKitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: FBSDKCoreKitTests
+        excludes:
+          - .swiftlint.yml
+    configFiles:
+      Debug: Configurations/FBSDKCoreKitTests.xcconfig
+      Release: Configurations/FBSDKCoreKitTests.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit-Dynamic
+        link: false
+        embed: false
+      - target: TestTools/TestTools
+        link: false
+        embed: false
+      - sdk: Accelerate.framework
+    settings:
+      GCC_WARN_UNUSED_FUNCTION: NO
+
+schemes:
+  FBSDKCoreKit-Static:
+    build:
+      targets:
+        FBSDKCoreKit-Static: all
+  FBSDKCoreKit-Dynamic:
+    build:
+      targets:
+        FBSDKCoreKit-Dynamic: all
+    test:
+      targets:
+        - FBSDKCoreKitTests
+      gatherCoverageData: true
+      coverageTargets:
+        - FBSDKCoreKit-Dynamic
+  FBSDKCoreKit_TV-Static:
+    build:
+      targets:
+        FBSDKCoreKit_TV-Static: all
+  FBSDKCoreKit_TV-Dynamic:
+    build:
+      targets:
+        FBSDKCoreKit_TV-Dynamic: all

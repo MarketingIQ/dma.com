@@ -1,0 +1,25 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+options:
+  deploymentTarget:
+    iOS: '12.0'
+  usesTabs: false
+  tabWidth: 2
+  indentWidth: 2
+  defaultConfig: Debug
+  xcodeVersion: '14.0'
+
+attributes:
+  ORGANIZATIONNAME: Facebook
+
+targetTemplates:
+  SwiftlintBuildPhaseTemplate:
+    preBuildScripts:
+      - name: Run Swiftlint
+        basedOnDependencyAnalysis: false
+        showEnvVars: false
+        script: ../scripts/build_phase_swiftlint.sh
